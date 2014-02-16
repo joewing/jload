@@ -2,7 +2,7 @@
 CC=gcc
 LD=gcc
 CFLAGS=-O2 -Wall
-LDFLAGS=-lX11
+LDFLAGS=-L/usr/lib/X11 -lX11
 
 OBJECTS=jload.o
 

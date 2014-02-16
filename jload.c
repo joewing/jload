@@ -12,7 +12,7 @@
 #ifdef __linux
 #  include "linux.c"
 #else
-#  warn "unrecognized operating system"
+#  warning "unrecognized operating system"
 #  include "unknown.c"
 #endif
 
