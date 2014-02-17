@@ -121,6 +121,7 @@ static void HandleConfigure(const XConfigureEvent *event)
       }
    }
    width = event->width;
+   height = event->height;
 }
 
 /** Process events. */
