@@ -1,0 +1,13 @@
+
+all:
+	cd src && $(MAKE)
+
+install:
+	cd src && $(MAKE) install
+
+clean:
+	cd src && $(MAKE) clean
+
+distclean:
+	cd src && $(MAKE) distclean
+	rm -rf Makefile configure config.* aclocal.m4 autom4te.cache

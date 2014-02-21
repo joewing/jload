@@ -10,7 +10,11 @@ specify a command to execute when clicked.
 
 Building
 ------------------------------------------------------------------------------
-Run `make` and copy the resulting `jload` application somewhere in your $PATH.
+If building directly from a clone of the git repository, first run
+`autoreconf`.  Then
+* `./configure`
+* `make`
+* `make install`
 
 Usage
 ------------------------------------------------------------------------------

@@ -1,0 +1,31 @@
+
+CC = @CC@
+INSTALL = @INSTALL@
+CFLAGS = @CFLAGS@
+LDFLAGS = @LDFLAGS@
+BINDIR = $(DESTDIR)@BINDIR@
+STRIP = strip
+
+OBJECTS = jload.o getload.o cpucount.o
+EXE = jload
+
+.SUFFIXES: .o .h .c
+
+all: $(EXE)
+
+$(EXE): $(OBJECTS)
+	$(CC) -o $(EXE) $(OBJECTS) $(LDFLAGS)
+	$(STRIP) $(EXE)
+
+.c.o: $< *.h ../config.h
+	$(CC) -c $(CFLAGS) $<
+
+install: all
+	$(INSTALL) -d $(BINDIR)
+	$(INSTALL) $(EXE) $(BINDIR)/$(EXE)
+
+clean:
+	rm -f *.o $(EXE)
+
+distclean: clean
+	rm -f Makefile

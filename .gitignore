@@ -1,2 +1,5 @@
 *.o
 jload
+Makefile
+autom4te.cache
+*~

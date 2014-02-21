@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,12 +8,9 @@
 #include <X11/Xatom.h>
 #include <X11/Xutil.h>
 
-#ifdef __linux
-#  include "linux.c"
-#else
-#  warning "unrecognized operating system"
-#  include "unknown.c"
-#endif
+#include "../config.h"
+#include "getload.h"
+#include "cpucount.h"
 
 #define VERSION               "0.1"
 #define DEFAULT_WIDTH         32
@@ -54,11 +50,13 @@ static void RunCommand()
 /** Update the load chart. */
 static void UpdateLoad()
 {
+   const double load = GetLoad();
+   const unsigned int cpu_count = GetCPUCount();
    if(!averages) {
       averages = (double*)calloc(width, sizeof(double));
    }
    memmove(&averages[1], averages, sizeof(double) * (width - 1));
-   averages[0] = GetLoad();
+   averages[0] = load / cpu_count;
 }
 
 /** Draw the window. */
@@ -175,7 +173,8 @@ static void EventLoop()
 /** Display usage. */
 static void DisplayHelp(const char *name)
 {
-   printf("JLoad v" VERSION " by Joe Wingbermuehle\n");
+   printf("JLoad v" PACKAGE_VERSION " by Joe Wingbermuehle <"
+          PACKAGE_BUGREPORT ">\n");
    printf("usage: %s [options]\n", name);
    printf("  -command <string>   Command to run when clicked\n");
    printf("  -display <string>   Set the display to use\n");
