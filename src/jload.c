@@ -102,7 +102,7 @@ static void DrawWindow()
    /* Draw bars. */
    XSetForeground(display, gc, hl);
    for(i = 1; i < scale; i++) {
-      const int y = i * ((height + i - 1) / scale);
+      const int y = i * (height / scale);
       XDrawLine(display, window, gc, 0, y, width, y);
    }
 
