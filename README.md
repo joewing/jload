@@ -23,6 +23,7 @@ jload [options]
   -command <string>   Command to run when clicked
   -display <string>   Set the display to use
   -geometry <string>  Window geometry
+  -update <int>       Update interval in seconds
   -fg <string>        Foreground color
   -bg <string>        Background color
   -hl <string>        Scale color
