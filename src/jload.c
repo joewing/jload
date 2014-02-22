@@ -18,14 +18,14 @@
 #define DEFAULT_BACKGROUND    0x000000
 #define DEFAULT_FOREGROUND    0xFF0000
 #define DEFAULT_HL            0xFFFFFF
-#define DEFAULT_INTERVAL_MS   10000
+#define DEFAULT_INTERVAL_SEC  10
 #define SHELL_NAME            "/bin/sh"
 
 static Atom delete_atom;
 static Atom protocols_atom;
 static unsigned int width = DEFAULT_WIDTH;
 static unsigned int height = DEFAULT_HEIGHT;
-static long interval_ms = DEFAULT_INTERVAL_MS;
+static long interval_sec = DEFAULT_INTERVAL_SEC;
 static unsigned long fg = DEFAULT_FOREGROUND;
 static unsigned long hl = DEFAULT_HL;
 static Display *display;
@@ -65,15 +65,14 @@ static void DrawWindow()
 
    static struct timeval last_update = { 0, 0 };
    struct timeval tv;
-   long diff_ms;
+   long diff_sec;
    int i;
    int scale;
 
    /* Determine if we should update the display. */
    gettimeofday(&tv, NULL);
-   diff_ms = (tv.tv_sec - last_update.tv_sec) * 1000L;
-   diff_ms += (tv.tv_usec - last_update.tv_usec) / 1000L;
-   if(diff_ms >= interval_ms || last_update.tv_sec == 0) {
+   diff_sec = tv.tv_sec - last_update.tv_sec;
+   if(diff_sec >= interval_sec || last_update.tv_sec == 0) {
       UpdateLoad();
       last_update = tv;
    }
@@ -139,8 +138,8 @@ static void EventLoop()
          FD_ZERO(&fds);
          FD_SET(fd, &fds);
 
-         timeout.tv_sec = interval_ms / 1000;
-         timeout.tv_usec = (interval_ms % 1000) * 1000;
+         timeout.tv_sec = interval_sec;
+         timeout.tv_usec = 0;
          if(select(fd + 1, &fds, NULL, NULL, &timeout) <= 0) {
             DrawWindow();
          }
@@ -179,6 +178,7 @@ static void DisplayHelp(const char *name)
    printf("  -command <string>   Command to run when clicked\n");
    printf("  -display <string>   Set the display to use\n");
    printf("  -geometry <string>  Window geometry\n");
+   printf("  -update <int>       Update interval in seconds\n");
    printf("  -fg <string>        Foreground color\n");
    printf("  -bg <string>        Background color\n");
    printf("  -hl <string>        Scale color\n");
@@ -233,11 +233,11 @@ int main(int argc, char *argv[])
       } else if(!strcmp(argv[i], "-hl") && i + 1 < argc) {
          hl_string = argv[i + 1];
          i += 1;
-      } else if(!strcmp(argv[i], "-interval") && i + 1 < argc) {
-         interval_ms = atoi(argv[i + 1]);
-         if(interval_ms < 1) {
-            fprintf(stderr, "WARN: invalid -interval: %s\n", argv[i + 1]);
-            interval_ms = DEFAULT_INTERVAL_MS;
+      } else if(!strcmp(argv[i], "-update") && i + 1 < argc) {
+         interval_sec = atoi(argv[i + 1]);
+         if(interval_sec < 1) {
+            fprintf(stderr, "WARN: invalid -update: %s\n", argv[i + 1]);
+            interval_sec = DEFAULT_INTERVAL_SEC;
          }
          i += 1;
       } else {
