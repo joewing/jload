@@ -29,7 +29,6 @@ double GetLoad()
    SGT_COOKIE_SET_KSYM(&cookie, KSYM_AVENRUN);
    sysget(SGT_KSYM, (char*)&load, sizeof(load), SGT_READ, &cookie);
    avg = (double)load[0] / 1024.0;
-   printf("%g\n", (float)avg);
 #else
 #  error "don't know how to get the load average"
 #endif
