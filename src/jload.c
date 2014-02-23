@@ -15,9 +15,10 @@
 #define VERSION               "0.1"
 #define DEFAULT_WIDTH         32
 #define DEFAULT_HEIGHT        32
-#define DEFAULT_BACKGROUND    0x000000
-#define DEFAULT_FOREGROUND    0xFF0000
-#define DEFAULT_HL            0xFFFFFF
+#define DEFAULT_BACKGROUND    "rgb:0/0/0"
+#define DEFAULT_FOREGROUND    "rgb:F/0/0"
+#define DEFAULT_HL            "rgb:F/F/F"
+
 #define DEFAULT_INTERVAL_SEC  10
 #define SHELL_NAME            "/bin/sh"
 
@@ -26,8 +27,8 @@ static Atom protocols_atom;
 static unsigned int width = DEFAULT_WIDTH;
 static unsigned int height = DEFAULT_HEIGHT;
 static long interval_sec = DEFAULT_INTERVAL_SEC;
-static unsigned long fg = DEFAULT_FOREGROUND;
-static unsigned long hl = DEFAULT_HL;
+static unsigned long fg;
+static unsigned long hl;
 static Display *display;
 static Window window;
 static GC gc;
@@ -185,19 +186,17 @@ static void DisplayHelp(const char *name)
 }
 
 /** Look up a color by name. */
-static long GetColor(const char *name, long def)
+static long GetColor(const char *name)
 {
-   if(name) {
-      XColor color;
-      Colormap cmap = DefaultColormap(display, DefaultScreen(display));
-      if(XParseColor(display, cmap, name, &color)) {
-         XAllocColor(display, cmap, &color);
-         return color.pixel;
-      } else {
-         fprintf(stderr, "WARN: color not found: %s\n", name);
-      }
+   XColor color;
+   Colormap cmap = DefaultColormap(display, DefaultScreen(display));
+   if(XParseColor(display, cmap, name, &color)) {
+      XAllocColor(display, cmap, &color);
+      return color.pixel;
+   } else {
+      fprintf(stderr, "WARN: color not found: %s\n", name);
+      return 0;
    }
-   return def;
 }
 
 /** The main function. */
@@ -205,10 +204,10 @@ int main(int argc, char *argv[])
 {
    XClassHint *chint;
    const char *display_string = NULL;
-   const char *fg_string = NULL;
-   const char *bg_string = NULL;
-   const char *hl_string = NULL;
-   unsigned long bg = DEFAULT_BACKGROUND;
+   const char *fg_string = DEFAULT_FOREGROUND;
+   const char *bg_string = DEFAULT_BACKGROUND;
+   const char *hl_string = DEFAULT_HL;
+   unsigned long bg;
    Window root;
    int x, y;
    int i;
@@ -253,9 +252,9 @@ int main(int argc, char *argv[])
       return -1;
    }
 
-   fg = GetColor(fg_string, DEFAULT_FOREGROUND);
-   bg = GetColor(bg_string, DEFAULT_BACKGROUND);
-   hl = GetColor(hl_string, DEFAULT_HL);
+   fg = GetColor(fg_string);
+   bg = GetColor(bg_string);
+   hl = GetColor(hl_string);
 
    /* Create the window. */
    root = XDefaultRootWindow(display);
