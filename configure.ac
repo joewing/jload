@@ -26,7 +26,8 @@ AC_CHECK_LIB([X11], XOpenDisplay,
 AC_CHECK_HEADERS([unistd.h])
 AC_CHECK_HEADERS([sys/types.h sys/sysctl.h])
 AC_CHECK_HEADERS([sys/mpctl.h])
-AC_CHECK_FUNCS([sysconf sysctl mpctl])
+AC_CHECK_HEADERS([sys/sysget.h])
+AC_CHECK_FUNCS([sysconf sysctl mpctl sysget])
 
 AC_CHECK_HEADERS([loadavg.h sys/loadavg.h])
 AC_CHECK_FUNCS([getloadavg])
