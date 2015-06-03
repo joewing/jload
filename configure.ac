@@ -1,5 +1,5 @@
-AC_INIT(jload, 0.1, joewing@joewing.net)
-AC_PREREQ(2.57)
+AC_INIT([jload],[0.1],[joewing@joewing.net])
+AC_PREREQ([2.69])
 AC_CONFIG_HEADER([config.h])
 AC_LANG(C)
 
@@ -32,10 +32,21 @@ AC_CHECK_FUNCS([sysconf sysctl mpctl sysget])
 AC_CHECK_HEADERS([loadavg.h sys/loadavg.h])
 AC_CHECK_FUNCS([getloadavg])
 
+if test "$prefix" = "NONE" ; then
+   PREFIX="$ac_default_prefix"
+   prefix="$ac_default_prefix"
+else
+   PREFIX="$prefix"
+fi
+if test "$exec_prefix" = "NONE" ; then
+   exec_prefix="$PREFIX"
+fi
+BINDIR=`eval echo \""$bindir"\"`
+
 AC_SUBST(CFLAGS)
 AC_SUBST(LDFLAGS)
 AC_SUBST(PACKAGE_VERSION)
-AC_SUBST(BINDIR)
+AC_SUBST(BINDIR, "$BINDIR")
 
-AC_OUTPUT(Makefile)
-AC_OUTPUT(src/Makefile)
+AC_CONFIG_FILES([Makefile src/Makefile])
+AC_OUTPUT
